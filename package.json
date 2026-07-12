@@ -11,11 +11,16 @@
     "build": "tsc -b",
     "typecheck": "tsc -b --pretty false",
     "test": "vitest run",
-    "verify": "npm run typecheck && npm run build && npm run test",
+    "test:coverage": "vitest run --coverage",
+    "test:mutation": "stryker run",
+    "verify": "npm run typecheck && npm run build && npm run test:coverage",
     "clean": "tsc -b --clean"
   },
   "devDependencies": {
+    "@stryker-mutator/core": "^9.0.0",
+    "@stryker-mutator/vitest-runner": "^9.0.0",
     "@types/node": "^22.0.0",
+    "@vitest/coverage-v8": "^2.1.0",
     "execa": "^9.3.0",
     "typescript": "^5.6.0",
     "vitest": "^2.1.0"

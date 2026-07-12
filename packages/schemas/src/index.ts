@@ -96,10 +96,13 @@ const ConditionValueSchema = z.union([
   z.object({ any: z.array(z.string()) }).strict(),
 ]);
 
+// expires_in's format (\d+[smh]) and 24h ceiling are semantic rules, validated in
+// @aegis/policy's validatePolicyYaml — not duplicated here, to keep one source of
+// truth (APPROVAL_EXPIRY_INVALID / APPROVAL_EXPIRY_TOO_LONG).
 const ApprovalSettingsSchema = z.object({
   minimum: z.number().int().positive(),
   roles: z.array(z.string()),
-  expires_in: z.string().regex(/^\d+[smh]$/),
+  expires_in: z.string().min(1),
 });
 
 const PolicyRuleSchema = z

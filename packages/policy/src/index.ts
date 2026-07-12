@@ -201,6 +201,9 @@ export function compilePolicy(document: PolicyDocument): CompiledPolicy {
           approvals: {
             minimum: rule.approvals.minimum,
             roles: rule.approvals.roles,
+            // expires_in's format is a semantic rule (validatePolicyYaml), not a
+            // schema-level guarantee — compilePolicy can be called directly with an
+            // unvalidated document, so fall back rather than propagate undefined.
             expiresInMs: parseDuration(rule.approvals.expires_in) ?? 0,
           },
         }

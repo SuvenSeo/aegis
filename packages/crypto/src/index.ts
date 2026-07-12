@@ -9,8 +9,10 @@ import { createHash, sign as signWithKey, verify as verifySignature, type KeyObj
  */
 export class CanonicalizationError extends Error {}
 
+// Only called from canonicalize() below, after value has already been established to
+// be a non-null object that is neither a Date nor an Array — so no null/typeof guard
+// is needed here.
 function isPlainObject(value: unknown): value is Record<string, unknown> {
-  if (value === null || typeof value !== "object") return false;
   const proto = Object.getPrototypeOf(value);
   return proto === Object.prototype || proto === null;
 }
