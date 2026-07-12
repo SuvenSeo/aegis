@@ -1,0 +1,32 @@
+apiVersion: aegis.dev/v1
+kind: Policy
+metadata:
+  name: production-code-guard
+  version: 1
+spec:
+  subjects:
+    agents: [coding-agent]
+    roles: []
+  resources:
+    repositories: [acme/api]
+    environments: [production]
+  rules:
+    - id: allow-repository-read
+      effect: allow
+      capabilities: [repository.read, pull_request.read]
+    - id: protect-main
+      effect: require_approval
+      capabilities: [branch.push, pull_request.merge]
+      when:
+        branch: main
+      approvals:
+        minimum: 1
+        roles: [maintainer, security]
+        expires_in: 10m
+    - id: deny-workflow-escalation
+      effect: deny
+      capabilities: [repository.write]
+      when:
+        sensitive_paths_touched:
+          any: [.github/workflows/]
+        requested_permissions_increase: true

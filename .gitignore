@@ -1,0 +1,9 @@
+.worktrees/
+node_modules/
+dist/
+coverage/
+reports/
+*.log
+
+.stryker-tmp/
+*.tsbuildinfo

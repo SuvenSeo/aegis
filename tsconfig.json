@@ -1,0 +1,11 @@
+{
+  "files": [],
+  "references": [
+    { "path": "packages/schemas" },
+    { "path": "packages/crypto" },
+    { "path": "packages/policy" },
+    { "path": "packages/approvals" },
+    { "path": "packages/audit" },
+    { "path": "apps/cli" }
+  ]
+}

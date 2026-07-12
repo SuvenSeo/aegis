@@ -1,0 +1,22 @@
+{
+  "name": "@aegis/cli",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "aegis": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "dependencies": {
+    "@aegis/approvals": "0.1.0",
+    "@aegis/audit": "0.1.0",
+    "@aegis/crypto": "0.1.0",
+    "@aegis/policy": "0.1.0",
+    "@aegis/schemas": "0.1.0",
+    "commander": "^12.1.0"
+  }
+}

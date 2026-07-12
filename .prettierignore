@@ -1,0 +1,6 @@
+tests/golden/*.json
+coverage/
+reports/
+dist/
+
+.stryker-tmp/

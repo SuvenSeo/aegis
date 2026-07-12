@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "action_id": "act_01J2M8X7Y6Z5W4V3T2S1R0Q9P8",
+  "organization_id": "org_01J2M8X7Y6Z5W4V3T2S1R0Q9P8",
+  "gateway_id": "gw_01J2M8X7Y6Z5W4V3T2S1R0Q9P8",
+  "user_id": "usr_01J2M8X7Y6Z5W4V3T2S1R0Q9P8",
+  "agent_id": "agt_01J2M8X7Y6Z5W4V3T2S1R0Q9P8",
+  "session_id": "ses_01J2M8X7Y6Z5W4V3T2S1R0Q9P8",
+  "timestamp": "2026-07-11T18:00:00.000Z",
+  "provider": "github",
+  "capability": "pull_request.merge",
+  "target": {
+    "repository": "acme/api",
+    "branch": "main",
+    "environment": "production",
+    "pull_request": 184
+  },
+  "operation": {
+    "method": "merge",
+    "arguments_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "redacted_summary": "Merge PR 184 into main"
+  },
+  "context": {
+    "agent_name": "coding-agent",
+    "user_role": "developer",
+    "interactive_user_present": true,
+    "changed_files": 12,
+    "sensitive_paths_touched": ["src/"],
+    "prior_denials_in_session": 0,
+    "requested_permissions_increase": false
+  },
+  "evidence": {
+    "provider_verified": ["repository", "branch", "ci_status"],
+    "local_observed": [],
+    "model_derived": []
+  }
+}
