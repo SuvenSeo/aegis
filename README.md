@@ -1,8 +1,24 @@
 # Aegis
 
+[![CI](https://github.com/SuvenSeo/aegis/actions/workflows/ci.yml/badge.svg)](https://github.com/SuvenSeo/aegis/actions/workflows/ci.yml)
+
 Aegis Phase 1 is a deterministic, offline-first security core for governing AI-agent actions. It validates canonical action envelopes, compiles versioned policies, produces reproducible allow/deny/approval decisions, verifies signed approval grants, detects audit-chain tampering, and redacts secrets before evidence leaves a local process.
 
 Phase 1 is deliberately **not** a hosted service, MCP proxy, shell interceptor, GitHub App, deployment adapter, database, dashboard, or model-powered risk classifier. Those components build on the contracts established here.
+
+## Current status
+
+| Area | Status |
+|---|---|
+| Canonical action envelopes | Implemented |
+| Policy validation and compilation | Implemented |
+| Deterministic decision reduction | Implemented |
+| Signed approval verification | Implemented |
+| Tamper-evident audit chain verification | Implemented |
+| Secret redaction | Implemented |
+| CLI | Implemented |
+| Hosted enforcement gateway | Future phase |
+| Provider adapters | Future phase |
 
 ## Requirements
 
@@ -85,18 +101,18 @@ The key file format is:
 
 ## Package map
 
-| Package               | Responsibility                                        |
-| --------------------- | ----------------------------------------------------- |
-| `@aegis/schemas`      | Strict versioned runtime contracts                    |
-| `@aegis/capabilities` | Canonical capabilities and evidence requirements      |
-| `@aegis/crypto`       | Canonical JSON, SHA-256, and Ed25519 helpers          |
-| `@aegis/policy`       | YAML parsing, validation, compilation, and evaluation |
-| `@aegis/decision`     | Precedence and narrowing-constraint reduction         |
-| `@aegis/approvals`    | Target-bound signed approval grants                   |
-| `@aegis/audit`        | Signed tamper-evident event chains                    |
-| `@aegis/redaction`    | Deterministic secret-safe summaries                   |
-| `@aegis/testkit`      | Cross-package fixture builders for tests              |
-| `@aegis/cli`          | Local command-line interface                          |
+| Package | Responsibility |
+|---|---|
+| `@aegis/schemas` | Strict versioned runtime contracts |
+| `@aegis/capabilities` | Canonical capabilities and evidence requirements |
+| `@aegis/crypto` | Canonical JSON, SHA-256, and Ed25519 helpers |
+| `@aegis/policy` | YAML parsing, validation, compilation, and evaluation |
+| `@aegis/decision` | Precedence and narrowing-constraint reduction |
+| `@aegis/approvals` | Target-bound signed approval grants |
+| `@aegis/audit` | Signed tamper-evident event chains |
+| `@aegis/redaction` | Deterministic secret-safe summaries |
+| `@aegis/testkit` | Cross-package fixture builders for tests |
+| `@aegis/cli` | Local command-line interface |
 
 ## Security guarantees
 
@@ -112,6 +128,14 @@ The key file format is:
 
 Aegis Phase 1 operates inside a user-space process. It does not prevent a machine administrator from bypassing Aegis and invoking a provider or executable directly. It does not replace branch protection, IAM, secret managers, endpoint security, or provider-side audit logs. It provides deterministic contracts and evidence for later enforcement layers.
 
+## Recommended repository controls
+
+- Require CI before merge.
+- Require mutation testing for security-sensitive PRs.
+- Keep dependency updates separate from behavioral changes.
+- Review changes to canonical serialization, approval verification, audit verification, redaction, and policy precedence as security-sensitive.
+- Use signed releases once packages are published.
+
 ## Documentation
 
 - [Enforcement architecture](docs/architecture/enforcement-foundation.md)
@@ -122,3 +146,6 @@ Aegis Phase 1 operates inside a user-space process. It does not prevent a machin
 - [Approval grants](docs/reference/approval-grants.md)
 - [Audit chains](docs/reference/audit-chain.md)
 - [Threat model](docs/security/threat-model.md)
+- [Roadmap](docs/ROADMAP.md)
+- [Release checklist](docs/RELEASE_CHECKLIST.md)
+- [Security policy](SECURITY.md)
