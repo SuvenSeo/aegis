@@ -9,6 +9,9 @@
     "build": "tsc -b"
   },
   "dependencies": {
-    "@aegis/schemas": "0.1.0"
+    "@aegis/capabilities": "0.1.0",
+    "@aegis/crypto": "0.1.0",
+    "@aegis/schemas": "0.1.0",
+    "yaml": "^2.5.0"
   }
 }

@@ -81,3 +81,67 @@ export const ApprovalGrantSchema = z.object({
 });
 
 export type ApprovalGrant = z.infer<typeof ApprovalGrantSchema>;
+
+/**
+ * Policy envelope reconstructed from docs/reference/policy-language.md and
+ * examples/policies/production-code-guard.yaml. Condition values may be a primitive,
+ * an array of allowed values, a numeric bound, or a string-set overlap test.
+ */
+const ConditionValueSchema = z.union([
+  z.string(),
+  z.number(),
+  z.boolean(),
+  z.array(z.union([z.string(), z.number()])),
+  z.object({ min: z.number().optional(), max: z.number().optional() }).strict(),
+  z.object({ any: z.array(z.string()) }).strict(),
+]);
+
+const ApprovalSettingsSchema = z.object({
+  minimum: z.number().int().positive(),
+  roles: z.array(z.string()),
+  expires_in: z.string().regex(/^\d+[smh]$/),
+});
+
+const PolicyRuleSchema = z
+  .object({
+    id: z.string().min(1),
+    effect: z.enum(["allow", "deny", "require_approval", "allow_with_constraints"]),
+    capabilities: z.array(z.string().min(1)).min(1),
+    when: z.record(z.string(), ConditionValueSchema).optional(),
+    constraints: z.record(z.string(), z.unknown()).optional(),
+    approvals: ApprovalSettingsSchema.optional(),
+  })
+  .strict();
+
+export const PolicyDocumentSchema = z
+  .object({
+    apiVersion: z.literal("aegis.dev/v1"),
+    kind: z.literal("Policy"),
+    metadata: z
+      .object({
+        name: z.string().min(1),
+        version: z.number().int().positive(),
+      })
+      .strict(),
+    spec: z
+      .object({
+        subjects: z
+          .object({
+            agents: z.array(z.string()).default([]),
+            roles: z.array(z.string()).default([]),
+          })
+          .strict(),
+        resources: z
+          .object({
+            repositories: z.array(z.string()).default([]),
+            environments: z.array(z.string()).default([]),
+          })
+          .strict(),
+        rules: z.array(PolicyRuleSchema).min(1),
+      })
+      .strict(),
+  })
+  .strict();
+
+export type PolicyDocument = z.infer<typeof PolicyDocumentSchema>;
+export type PolicyRule = z.infer<typeof PolicyRuleSchema>;

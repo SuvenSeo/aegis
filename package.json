@@ -10,11 +10,14 @@
   "scripts": {
     "build": "tsc -b",
     "typecheck": "tsc -b --pretty false",
-    "verify": "npm run typecheck && npm run build",
+    "test": "vitest run",
+    "verify": "npm run typecheck && npm run build && npm run test",
     "clean": "tsc -b --clean"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
-    "typescript": "^5.6.0"
+    "execa": "^9.3.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
   }
 }

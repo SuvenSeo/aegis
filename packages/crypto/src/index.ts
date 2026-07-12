@@ -1,4 +1,4 @@
-import { createHash, verify as verifySignature, type KeyObject } from "node:crypto";
+import { createHash, sign as signWithKey, verify as verifySignature, type KeyObject } from "node:crypto";
 
 /**
  * Rebuilt from docs/reference/canonical-serialization.md — the original @aegis/crypto
@@ -71,6 +71,17 @@ function base64UrlToBuffer(input: string): Buffer {
   const padded = input.replace(/-/g, "+").replace(/_/g, "/");
   const padLength = (4 - (padded.length % 4)) % 4;
   return Buffer.from(padded + "=".repeat(padLength), "base64");
+}
+
+function bufferToBase64Url(buffer: Buffer): string {
+  return buffer.toString("base64").replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+export function signCanonical(value: unknown, privateKey: KeyObject): string {
+  const bytes = canonicalBytes(value);
+  // Ed25519 is a one-shot signature scheme: pass null for the digest algorithm.
+  const signature = signWithKey(null, bytes, privateKey);
+  return bufferToBase64Url(signature);
 }
 
 export function verifyCanonical(value: unknown, signature: string, key: KeyObject): boolean {

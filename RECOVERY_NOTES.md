@@ -39,14 +39,36 @@ tested against the (lost) golden fixtures:
   `docs/reference/approval-grants.md`
 - `packages/crypto` — **real, working** canonical-JSON + SHA-256 digest + Ed25519
   `verifyCanonical`, implemented directly from `docs/reference/canonical-serialization.md`
-- `packages/policy`, `packages/approvals`, `packages/audit` — **stubs only**. Correctly
-  typed (matching `apps/cli/src/index.ts` usage exactly) so the workspace type-checks and
-  builds, but every exported function throws `NotImplementedError` at runtime. Each
-  package's `src/index.ts` has a header comment describing what real implementation
-  would need to do, sourced from the matching `docs/reference/*.md` file.
+- `packages/capabilities` — **real, working** capability registry (namespaces, risk
+  class, offline eligibility, mandatory evidence, allowed constraints per
+  `docs/reference/capabilities.md`). The specific capability table is a reasonable
+  population consistent with the doc and the example fixtures, not recovered source —
+  extend it as new capabilities are needed.
+- `packages/policy` — **real, working** implementation: YAML parsing + schema/semantic
+  validation (unique rule ids, known capabilities, approvals/constraints block
+  requirements, expiry ≤ 24h) in `validatePolicyYaml`, deterministic compilation
+  (source digest + policy-version id) in `compilePolicy`, and full rule matching +
+  precedence reduction (deny > missing evidence > require_approval > narrowed
+  allow_with_constraints > allow > default deny) in `evaluatePolicies`, built from
+  `docs/reference/policy-language.md` and `docs/reference/decision-precedence.md`.
+- `packages/approvals` — **real, working**: `issueApprovalGrant` and `verifyApprovalGrant`
+  (signature verification, organization/subject/action/target/capability binding,
+  expiry window, nonce replay protection, usage budget, constraint narrowing) per
+  `docs/reference/approval-grants.md`.
+- `packages/audit` — **real, working**: `appendAuditEvent` and `verifyAuditChain`
+  (hash-chained events, signature verification, revocation, sequence continuity,
+  timestamp ordering, tamper detection) per `docs/reference/audit-chain.md`.
 
-**Bottom line**: this repo now installs and type-checks, and the CLI's schema validation
-and signature-verification primitives are real. Policy evaluation, approval-grant
-verification, and audit-chain verification are not — those are the next things to build,
-and `docs/reference/policy-language.md`, `decision-precedence.md`, `approval-grants.md`,
-and `audit-chain.md` are the closest thing to a spec for them.
+**Verification**: the recovered `apps/cli/test/cli.integration.test.ts` — written by
+this project's original authors as its own acceptance test — passes in full against
+this reimplementation (`npm run verify`: typecheck + build + all 7 integration tests,
+exit 0). That test exercises `policy validate`, `policy test`, `action validate`,
+`simulate` (asserting the exact `require_approval` / `protect-main` outcome for the
+example fixtures), `approval verify`, and `audit verify` end-to-end with real Ed25519
+keys — nothing here is mocked out.
+
+**Known gap**: `.github/workflows/ci.yml`'s `mutation` job runs `npm run test:mutation`
+via Stryker, but `stryker.config.json` and the mutation test setup were not recoverable,
+so that job (PR-triggered only, not push-triggered) will fail until mutation testing is
+reintroduced. The `verify` job — typecheck, build, and the full integration suite — is
+green.
